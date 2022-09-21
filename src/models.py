@@ -1,67 +1,62 @@
-import os
-import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
+from flask_sqlalchemy import SQLAlchemy
 from eralchemy import render_er
 
-Base = declarative_base()
+db = SQLAlchemy()
 
-  
-class Follower(Base):
-    __tablename__ = 'follower'
+
+class Follower(db.Model):
+   
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    user_to = Column(Integer)
-    user_from = Column(Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    user_to = db.Column(db.Integer)
+    user_from = db.Column(db.Integer)
 
 
-class Likes(Base):
-    __tablename__ = 'likes'
+class Likes(db.Model):
+    
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    like = Column(Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    like = db.Column(db.Integer)
        
 
-class Media(Base):
-    __tablename__ = 'media'
+class Media(db.Model):
+    
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    type = Column(String(250), nullable=False)
-    url = Column(String(250))
-    tag = Column(String(250))
-    likes_id = Column(Integer, ForeignKey('likes.id'))
-    likes = relationship(Likes)
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(250), nullable=False)
+    url = db.Column(db.String(250))
+    tag = db.Column(db.String(250))
+    likes_id = db.Column(db.Integer, db.ForeignKey('likes.id'))
+    likes = db.relationship(Likes)
 
-class Post(Base):
-    __tablename__ = 'post'
+class Post(db.Model):
+    
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    text = Column(String(250), nullable=False)
-    media_id = Column(Integer, ForeignKey('media.id'))
-    media = relationship(Media) 
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(250), nullable=False)
+    media_id = db.Column(db.Integer, db.ForeignKey('media.id'))
+    media = db.relationship(Media) 
       
 
-class Profile(Base):
-    __tablename__ = 'profile'
+class Profile(db.Model):
+    
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
-    email = Column(String(250), nullable=False)
-    username = Column(String(250), nullable=False)
-    bio = Column(String(250))
-    post_id = Column(Integer, ForeignKey('post.id'))
-    post = relationship(Post)
-    user_to_id = Column(Integer, ForeignKey('follower.id'))
-    follower = relationship(Follower)
-    user_from_id = Column(Integer, ForeignKey('follower.id'))
-    follower= relationship(Follower)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250), nullable=False)
+    email = db.Column(db.String(250), nullable=False)
+    username = db.Column(db.String(250), nullable=False)
+    bio = db.Column(db.String(250))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    post = db.relationship(Post)
+    user_to_id = db.Column(db.Integer, db.ForeignKey('follower.id'))
+    follower = db.relationship(Follower)
+    user_from_id = db.Column(db.Integer, db.ForeignKey('follower.id'))
+    follower= db.relationship(Follower)
 
  
    
@@ -78,7 +73,7 @@ class Profile(Base):
 
 ## Draw from SQLAlchemy base
 try:
-    result = render_er(Base, 'diagram.png')
+    result = render_er(db.Model, 'diagram.png')
     print("Success! Check the diagram.png file")
 except Exception as e:
     print("There was a problem genering the diagram")
